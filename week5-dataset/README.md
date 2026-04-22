@@ -34,3 +34,7 @@ To augment the data, the transformations I will apply include:
 - adding noise
 - adjusting resolution (e.g. downsampling)
 - sharpening or blurring the image
+
+## Self Reflection
+
+I am happy to have found datasets but I am a bit concerned about the fact that the datasets are sourced from multiple sources which means that the xrays could be produced through different protocols which might not be the best for my project as I can't isolate the effect of different protocols on the model's performance. However, I think I can still use the datasets as they are labelled, large and I could implement transformations to augment 'different protocs'. I also feel like I understand the differences in images based on protocols; however a limitation I see is that (since i'm not a radiologist) I might not be able to look at resultant images after transformation and know if they are realistic or not. For this case I also think using CT scans would be a better idea; one difference in protocol for CT scans leads to less number of slices which is a very clear difference that I can easily replicate and evaluate the model on. However, it being 3D would make it difficult to process given that i will train my model locally. I hope my approach seems appropriate to move forward with.
