@@ -6,6 +6,7 @@ import random
 import numpy as np
 from PIL import Image
 from scipy.ndimage import gaussian_filter
+import os
 
 
 def augment_xray(input_path: str, output_path: str):
@@ -26,7 +27,7 @@ def augment_xray(input_path: str, output_path: str):
     arr = gaussian_filter(arr, sigma=blur)
 
     # noise
-    noise_std = random.uniform(0.01, 0.08)
+    noise_std = random.uniform(0.04, 0.12)
     arr = arr + np.random.normal(0, noise_std, arr.shape).astype(np.float32)
     arr = np.clip(arr, 0, 1)
 
@@ -39,15 +40,24 @@ def augment_xray(input_path: str, output_path: str):
     arr = np.clip((arr - lo) / (hi - lo + 1e-6), 0, 1)
 
     Image.fromarray((arr * 255).astype(np.uint8), mode="L").save(output_path)
-    print(f"Save image -> {output_path}")
-    # print(f"scale={scale:.2f}, blur={blur:.2f}, noise={noise_std:.3f}, gamma={gamma:.2f}")
+    print(f"Save image: {output_path}")
 
+
+def augment_directory(src_root: str, dst_root: str):
+
+    for split in ["train", "test", "val"]:
+        for label in ["NORMAL", "PNEUMONIA"]:
+            src_dir = os.path.join(src_root, split, label)
+            dst_dir = os.path.join(dst_root, split, label)
+            os.makedirs(dst_dir, exist_ok=True)
+
+            for fname in os.listdir(src_dir):
+                if not fname.lower().endswith((".png", ".jpeg", ".jpg")):
+                    continue
+                augment_xray(
+                    os.path.join(src_dir, fname),
+                    os.path.join(dst_dir, fname)
+                )
 
 if __name__ == "__main__":
-
-    # 2 args -> input image and output image (path/name)
-
-    if len(sys.argv) != 3:
-        print("Usage: python xray_augment.py input.png output.png")
-        sys.exit(1)
-    augment_xray(sys.argv[1], sys.argv[2])
+    augment_directory("../chest_xray/xray_og", "../chest_xray/xray_transformed")
