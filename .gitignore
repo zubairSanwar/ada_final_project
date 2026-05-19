@@ -2,6 +2,8 @@
 __pycache__/
 *.py[codz]
 *$py.class
+chest_xray/
+*.keras
 
 # C extensions
 *.so
