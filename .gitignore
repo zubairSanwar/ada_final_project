@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 chest_xray/
 *.keras
+vit-finetuned-model/
+models/
 
 # C extensions
 *.so
